@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Bodies Monitoring</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #ffdab9;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #dataDisplay {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 align="center">Water Bodies Monitoring</h1>
+
+<form id="monitoringForm" align="center">
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="temperature">Water Temperature (°C):</label>
+    <input type="number" id="temperature" name="temperature" required>
+
+    <label for="ph">pH Level:</label>
+    <input type="number" min="1" max="14" id="ph" name="ph" required>
+
+    <label for="turbidity">Turbidity (NTU):</label>
+    <input type="number" id="turbidity" name="turbidity" required>
+
+    <label for="cdom">CDOM Measurement (mg/L):</label>
+    <input type="number" id="cdom" name="cdom" min="10" max="99" required>
+
+    <label for="fdom">FDOM Measurement (µg/L):</label>
+    <input type="number" id="fdom" name="fdom" min="100" max="2000" required>
+
+    <label for="doLevel">DO Level (mg/L):</label>
+    <input type="number" id="doLevel" name="doLevel" min="6.25" max="8.00" required>
+
+    <label for="tdsLevel">TDS Level (mg/L):</label>
+    <input type="number" id="tdsLevel" name="tdsLevel" min="50" max="1200" required>
+
+    <div class="water-level-box">
+        <h1>Water Level Monitoring</h1>
+        <div id="gauge">
+            <div id="current-level" style="height: 0;"></div>
+        </div>
+        <input type="number" id="level" placeholder="Enter water level (0-100000)" />
+        <button onclick="updateLevel()">Update Level</button>
+    </div>
+    
+<div class="container">
+    <h1>Water Transparency Monitor</h1>
+    <label for="transparency">Enter Transparency (in cm):</label>
+    <input type="number" id="transparency" placeholder="Transparency in cm">
+    <button onclick="checkTransparency()">Check</button>
+    
+    <div id="result" class="result" style="display: none;"></div>
+</div>
+
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+<div id="dataDisplay">
+    <h2 align="center">Monitoring Data</h2>
+    <ul id="dataList"></ul>
+</div>
+<div class="info-box" align="center">
+    <h2>Ammonium Chloride (NH<sub>4</sub>Cl)</h2>
+    <p>Ammonium chloride is commonly used in various applications, including water body monitoring.</p>
+    <p>For water quality monitoring, the recommended range for ammonium chloride concentration is:</p>
+    <p class="range">0.02 to 0.5 mg/L</p>
+    <p>Exceeding this range may indicate pollution or nutrient loading in aquatic environments.</p>
+    
+    <button onclick="toggleExtraInfo()">More Information</button>
+    <div class="extra-info" id="extraInfo">
+        <p>High levels of ammonium can be toxic to aquatic life, affecting fish and invertebrates. Monitoring is essential for maintaining ecosystem health.</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('monitoringForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        const location = document.getElementById('location').value;
+        const temperature = document.getElementById('temperature').value;
+        const ph = document.getElementById('ph').value;
+        const turbidity = document.getElementById('turbidity').value;
+
+        const dataList = document.getElementById('dataList');
+        const listItem = document.createElement('li');
+        listItem.textContent = `Location: ${location}, Temperature: ${temperature}°C, pH: ${ph}, Turbidity: ${turbidity} NTU`;
+        dataList.appendChild(listItem);
+
+        function checkTransparency() {
+        const transparencyInput = document.getElementById('transparency').value;
+        const resultDiv = document.getElementById('result');
+
+        if (transparencyInput === '30') {
+            alert('Please enter a transparency value.');
+            return;
+        }
+
+        const transparency = parseFloat(transparencyInput);
+        resultDiv.style.display = 'block';
+
+        if (transparency > 30) {
+            resultDiv.textContent = 'Water is clear.';
+            resultDiv.className = 'result clear';
+        } else {
+            resultDiv.textContent = 'Water is turbid.';
+            resultDiv.className = 'result turbid';
+        }
+    }
+
+        function updateLevel() {
+        const levelInput = document.getElementById('level').value;
+        const currentLevel = document.getElementById('current-level');
+
+        // Validate the input
+        if (levelInput < 0 || levelInput > 100) {
+            alert('Please enter a level between 0 and 100.');
+            return;
+        }
+
+        document.getElementById('tdsMeasurementForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const tdsLevel = document.getElementById('tdsLevel').value;
+            alert(`Total Dissolved Solids Level: ${tdsLevel} mg/L`);
+        document.getElementById('waterMonitoringForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const cdom = document.getElementById('cdom').value;
+            const fdom = document.getElementById('fdom').value;
+            alert(`CDOM: ${cdom} mg/L\nFDOM: ${fdom} µg/L`);
+        document.getElementById('doMeasurementForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const doLevel = document.getElementById('doLevel').value;
+            alert(`Dissolved Oxygen Level: ${doLevel} mg/L`);
+        document.getElementById('monitoringForm').reset();
+    });
+    function toggleExtraInfo() {
+        const extraInfo = document.getElementById('extraInfo');
+        if (extraInfo.style.display === 'none' || extraInfo.style.display === '') {
+            extraInfo.style.display = 'block';
+        } else {
+            extraInfo.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
+
